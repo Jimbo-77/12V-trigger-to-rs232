@@ -1,9 +1,13 @@
 # 12V-trigger-to-rs232
 Code to manage the Cambridge 851A hifi amplifier from the HomeCinema 12V triggerOut.
 :Author: Jimbo-77
+
 :Email: jlegrand@free.fr
+
 :Date: 29/12/2019
+
 :Revision: version#
+
 :License: Public Domain
 
 = Project: 12V-trigger-to-rs232.git
