@@ -14,7 +14,7 @@ Code to manage the Cambridge 851A hifi amplifier from the HomeCinema 12V trigger
 
 The goal of this project is to create a program managing a Cambridge 851A amplifier when a 12V trigger out is received.
 when the homcinema power up, the 12v trigger out become high. 
-Then the arduino send a power on command and after few seconds the select input command.
+Then the arduino sends a power on command and after few seconds the select input command.
 
 The program includes different cases, like the Cambridge amplifier is not powered down when the input source is different than the homecinema input.
 
@@ -33,7 +33,7 @@ Assemble the circuit following the diagram layout.png attached to the sketch
 
 == Step 3: Load the code
 
-Upload the code contained in this sketch on to your board
+Upload the code contained in this sketch on to your board.
 
 === Folder structure
 
