@@ -24,7 +24,7 @@ const int triggerInput = A0;
 const int dividerGain = 3;
 
 // Set trigger value limit
-const float triggerLimit = 11 / dividerGain;
+const float triggerLimit = 11.0 / dividerGain;
 
 // Set const Power State
 const bool OFF = false;
@@ -49,7 +49,7 @@ const int HCinput = LINE1;
 // Set const RS232 commands
 const String powerON = "#1,11,1\r";
 const String powerOFF = "#1,11,0\r";
-const String selectHCSource = "#1,01,\r";
+const String selectHCSource = "#1,01,1\r";
 
 // Set const RS232 replies
 const String IAmPowerON = "#4,11,1";
@@ -110,7 +110,6 @@ bool Ampli_powerState = OFF;
 
 // Set the selected source
 int sourceSelected = 0;
-int sourceSelectedTmp;
 
 // Set and initialize trigger value
 float triggerValue = -1;
@@ -177,7 +176,7 @@ void loop() {
     }
   // See if the ampli has something new to say and update status
   ampliReply = readAmpliReply();
-  ProcessReply(ampliReply, noReply);
+  ProcessReply(ampliReply);
   int readValue = analogRead(triggerInput);
 
   triggerValue = (float)readValue * ((float)5 / (float)1023);
@@ -207,7 +206,7 @@ void loop() {
     }
     
     
-    // We let the programp looping for 3s and then we change the source input
+    // We let the program looping for 3s and then we change the source input
     if(millis() - timestamp > 2000)
     {
       timestamp = millis();
@@ -243,7 +242,7 @@ void loop() {
 
 
 // Function to process the reply and update the LCD
-void ProcessReply(String reply, String expectedReply)
+void ProcessReply(String reply)
 {
    if(DEBUG_MODE)
     {
@@ -319,15 +318,15 @@ void ProcessReply(String reply, String expectedReply)
               Serial.println("= ProcessReply = sourceNbChar variable : " + String(sourceNbChar));
             }
             
-            int sourceNum;
-            
+            int sourceNum = 0;
+
             int returnScan = sscanf(&sourceNbChar, "%d", &sourceNum);
             if(DEBUG_MODE)
               {
                 Serial.println("= ProcessReply = Scanf return = " + String(returnScan));
                 Serial.println("= ProcessReply = SourceNum variable = " + String(sourceNum));
               }
-            if(sourceNum < 8)
+            if(returnScan == 1 && sourceNum < 8)
             {
               if(DEBUG_MODE)
               {
@@ -591,16 +590,21 @@ String readAmpliReply()
             {
               Serial.println("= readAmpliReply = sourceNb variable = " + String(sourceNb));
             }
-            sscanf(&sourceNb, "%d", &sourceSelected);
-            
-            if(sourceSelected < 8)
+            int sscanfResult = sscanf(&sourceNb, "%d", &sourceSelected);
+
+            if(sscanfResult == 1 && sourceSelected < 8)
             {
-              
+
               if(DEBUG_MODE)
               {
                 Serial.println("= readAmpliReply = Source number < 8");
                 Serial.println("= readAmpliReply = sourceSelected variable = " + String(sourceSelected));
               }
+              return ampliReply;
+            }
+            else
+            {
+              // Tape monitor source (>= 8): return the reply without updating sourceSelected
               return ampliReply;
             }
           }
